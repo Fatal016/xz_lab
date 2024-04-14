@@ -1,0 +1,2 @@
+Match User *,!root
+        ForceCommand sudo docker run -d ubuntu:latest tail -f /dev/null && sudo docker exec -it $(sudo docker ps -lq) /bin/bash
