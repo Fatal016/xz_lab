@@ -10,13 +10,11 @@ private_subnet_cidr = "10.110.2.0/24"
 num_targets = 3 # Number of hosts to target
 
 
-
-
 allowed_IPs = 	[
 				"130.111.218.0/23",	# Barrows
 				"68.234.239.248/32" # The Reserve	
 				]
 
 controller_key_name = "xz_lab_controller"
-jumpbox_key_name = "xz_lab_jumpbox"
-target_key_name = "xz_lab_target"
+
+ansible_expression = "ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/xz_lab_target"

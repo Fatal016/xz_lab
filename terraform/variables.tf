@@ -52,3 +52,8 @@ variable "target_key_name" {
 	type = string
 	description = "key that targets were deployed with (used for troubleshooting)"
 }
+
+variable "ansible_expression" {
+	type = string
+	description = "string that will be appended to private addresses in inventory file for ansible playbook execution"
+}

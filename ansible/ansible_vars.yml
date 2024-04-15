@@ -1,2 +1,6 @@
 repo_url: https://github.com/amlweems/xzbot.git
-working_directory: /tmp/deployment
+working_directory: resources
+
+ssh_keys:
+  - ~/.ssh/xz_lab_jumpbox
+  - ~/.ssh/xz_lab_target

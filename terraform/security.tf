@@ -31,6 +31,14 @@ resource "aws_security_group" "xz_lab_public_subnet" {
 		cidr_blocks = ["0.0.0.0/0"]
 	}
 
+	# TEMP allow all SSH
+	ingress {
+		from_port = 22
+		to_port = 22
+		protocol = "tcp"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
 	######################
 	### Outbound Rules ###
 	######################
@@ -58,12 +66,12 @@ resource "aws_security_group" "xz_lab_private_subnet" {
 	#####################
 
 	# Allow SSH from Ansible Controller
-	ingress {
-		from_port = 22
-		to_port = 22
-		protocol = "tcp"
-		cidr_blocks = ["${aws_instance.controller.private_ip}/32"]
-	}
+	#ingress {
+	#	from_port = 22
+	#	to_port = 22
+	#	protocol = "tcp"
+	#	cidr_blocks = ["${aws_instance.controller.private_ip}/32"]
+	#}
 
 	# Allow all traffic from jumpbox
 	# Intentionally leaving all ports accessible to allow for other methods of persistence
