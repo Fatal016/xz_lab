@@ -1,5 +1,3 @@
-controller_ami 	= "ami-0b8b44ec9a8f90422" # Ubuntu Server 22.04 LTS
-
 jumpbox_ami 	= "ami-0b8b44ec9a8f90422" # Ubuntu Server 22.04 LTS
 jumpbox_user	= "ubuntu"
 
@@ -20,10 +18,7 @@ allowed_IPs = 	[
 				"0.0.0.0/0" 			# Allowing all for testing
 				]
 
-controller_key_name = "xz_lab_controller"
 jumpbox_key_name = "xz_lab_jumpbox"
 target_key_name = "xz_lab_target"
 
 key_path = "~/.ssh/"
-
-ansible_expression = "ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/xz_lab_target"

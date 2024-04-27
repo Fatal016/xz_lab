@@ -1,0 +1,22 @@
+- name: build and populate key filesystem for admin
+  hosts: localhost
+  vars:
+    num_users: "{{ groups['target']|length }}"
+    user_name: "{{ 'xzlab%02x' | format(item) }}"
+  pre_tasks:
+   - name: include ansible vars
+     include_vars: "ansible_vars.yml"
+  tasks:
+    - name: create admin directory if not already present
+      file:
+        path: ../admin/
+        state: directory
+    - name: create private key directory
+      file:
+        path: ../admin/jumpbox_keys
+        state: directory
+    - name: build keystore    
+      include_tasks: controller_keystore.yml
+      loop: "{{ range(0, num_users|int, 1)|list }}"
+      loop_control:
+        label: "{{ user_name }}"

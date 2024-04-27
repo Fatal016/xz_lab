@@ -1,0 +1,8 @@
+- name: create users on jumpbox
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    shell: /bin/bash
+- name: add pub key to user authorized_keys
+  authorized_key:
+    user: "{{ user_name }}"
+    key: "{{ lookup('file', '../../admin/jumpbox_keys/{{ user_name }}/id_rsa.pub') }}"

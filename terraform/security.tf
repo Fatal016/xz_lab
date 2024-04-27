@@ -90,6 +90,17 @@ resource "aws_security_group" "xz_lab_private_subnet" {
 		cidr_blocks = [var.private_subnet_cidr]
 	}
 
+
+	# Allow all traffic from all hosts (for testing)
+	ingress {
+		from_port = 0
+		to_port = 0
+		protocol = "-1"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
+
+
 	######################
 	### Outbound Rules ###
 	######################

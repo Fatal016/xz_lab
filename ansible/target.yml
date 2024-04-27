@@ -1,8 +1,11 @@
 - hosts: target
+  gather_facts: no
   pre_tasks:
     - name: include ansible vars
       include_vars: "ansible_vars.yml" 
   tasks:
+    - name: wait for reachable
+      wait_for_connection:
     - name: inject vulnerability
       ansible.builtin.copy:
         src: "{{ working_directory }}/assets/liblzma.so.5.6.1.patch"

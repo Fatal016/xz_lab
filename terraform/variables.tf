@@ -1,8 +1,3 @@
-#variable "controller_ami" {
-#	type = string
-#	description = "ami for controller instance"
-#}
-
 variable "jumpbox_ami" {
 	type = string
 	description = "ami for jumpbox instance"
@@ -47,11 +42,6 @@ variable "allowed_IPs" {
 	type = list(string)
 	description = "IPs allowed to access instances in the public subnet"
 }
-
-#variable "controller_key_name" {
-#	type = string
-#	description = "key that the controller is deployed with"
-#}
 
 variable "jumpbox_key_name" {
 	type = string

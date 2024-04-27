@@ -42,23 +42,3 @@ resource "aws_instance" "target" {
 		ManagedBy = "Terraform"
 	}
 }
-
-resource "local_file" "host_inventory" {
-	filename = "../ansible/inventory.ini"
-	content = <<-EOT
-				[jumpbox]
-				${aws_instance.jumpbox.private_ip}
-				
-				[target]
-				${join("\n",aws_instance.target.*.private_ip)}
-				
-				[jumpbox:vars]
-				ansible_user=${var.jumpbox_user}
-				ansible_ssh_private_key_file=${var.key_path}${var.jumpbox_key_name}
-				
-				[target:vars]
-				ansible_user=${var.target_user}
-				ansible_ssh_private_key_file=${var.key_path}${var.target_key_name}
-				EOT
-	file_permission = "0660"
-}
