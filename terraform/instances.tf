@@ -1,24 +1,3 @@
-# Administration and Ansible Controller
-#resource "aws_instance" "controller" {
-#	ami = var.controller_ami
-#	instance_type = "t3a.micro"
-#
-#	# Putting controller in public subnet
-#	subnet_id = aws_subnet.xz_lab_public_subnet.id
-#	
-#	# Attaching port groups
-#	vpc_security_group_ids = [aws_security_group.xz_lab_public_subnet.id]
-#
-#	key_name = var.controller_key_name
-#
-#	associate_public_ip_address = true
-#
-#	tags = {
-#		Name = "XZ Lab Ansible Controller"
-#		ManagedBy = "Terraform"
-#	}
-#}
-
 # User jumpbox
 resource "aws_instance" "jumpbox" {
 	ami = var.jumpbox_ami
@@ -64,8 +43,22 @@ resource "aws_instance" "target" {
 	}
 }
 
-resource "local_file" "private_addresses" {
+resource "local_file" "host_inventory" {
 	filename = "../ansible/inventory.ini"
-	content = "${join("", formatlist("%s %s\n", aws_instance.target.*.private_ip, var.ansible_expression))}"
+	content = <<-EOT
+				[jumpbox]
+				${aws_instance.jumpbox.private_ip}
+				
+				[target]
+				${join("\n",aws_instance.target.*.private_ip)}
+				
+				[jumpbox:vars]
+				ansible_user=${var.jumpbox_user}
+				ansible_ssh_private_key_file=${var.key_path}${var.jumpbox_key_name}
+				
+				[target:vars]
+				ansible_user=${var.target_user}
+				ansible_ssh_private_key_file=${var.key_path}${var.target_key_name}
+				EOT
 	file_permission = "0660"
 }
