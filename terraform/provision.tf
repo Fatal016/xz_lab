@@ -27,11 +27,39 @@ resource "local_file" "host_inventory" {
 	file_permission = "0660"
 }
 
-#resource "ansible_group" "target" {
-#
-#	name = "target"
-#	children = [join(",",aws_instance.target.*.private_ip)]
-#}
+resource "local_file" "ssh_config" {
+	depends_on = [ansible_playbook.ansible_controller]
+
+	filename = "../admin/ssh_config"
+	content = <<-EOT
+				Host jumpbox
+					HostName ${aws_instance.jumpbox.public_dns}
+					IdentityFile ${var.key_path}${var.jumpbox_key_name}
+				EOT
+}
+
+resource "ansible_group" "target" {
+	depends_on = [local_file.ssh_config]
+
+	name = "target"
+	children = [join(",",aws_instance.target.*.private_ip)]
+}
+
+resource "ansible_playbook" "ansible_controller" {
+	playbook = "../ansible/controller/controller.yml"
+	name = "localhost"
+	replayable = true
+	verbosity = 2
+
+	extra_vars = {
+		num_users=length(aws_instance.target)
+		root_dir="${path.cwd}/.."
+	}
+}
+
+
+
+
 
 #resource "ansible_playbook" "test_connectivity" {
 #	depends_on = [aws_instance.target]	
