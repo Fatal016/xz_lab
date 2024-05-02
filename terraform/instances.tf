@@ -38,7 +38,7 @@ resource "aws_instance" "target" {
 	count = var.num_targets
 
 	tags = {
-		Name = "XZ Lab Target #${count.index}"
+		Name = "target_${count.index}"
 		ManagedBy = "Terraform"
 	}
 }

@@ -9,7 +9,7 @@ public_subnet_cidr = "10.110.1.0/24"
 private_subnet_cidr = "10.110.2.0/24"
 
 
-num_targets = 3 # Number of hosts to target
+num_targets = 2 # Number of hosts to target
 
 
 allowed_IPs = 	[
