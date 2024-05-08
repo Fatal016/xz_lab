@@ -1,18 +1,8 @@
-- hosts: localhost
-  tasks:
-    - name: create working directory
-      file:
-        path: "../../admin/xz"
-        state: directory
-    - name: pull xz_bot repo
-      git:
-        repo: https://github.com/amlweems/xzbot.git
-        dest: "../../admin/xz"
-
-- hosts: target
-  tasks:
-    - name: inject vulnerability
-      copy:
-        src: "{{ ../../admin/xz/assets/liblzma.so.5.6.1.patch"
-        dest: /lib/x86_64-linux-gnu/liblzma.so.5.2.5
-      become: true
+- name: create working directory
+  file:
+    path: "{{ admin_path }}/xz/"
+    state: directory
+- name: pull xz_bot repo
+  git:
+    repo: https://github.com/amlweems/xzbot.git
+    dest: "{{ admin_path }}/xz"

@@ -14,7 +14,7 @@ resource "aws_instance" "jumpbox" {
 	associate_public_ip_address = true
 
 	tags = {
-		Name = "XZ Lab Jumpbox"
+		Name = "jumpbox"
 		ManagedBy = "Terraform"
 	}
 }
