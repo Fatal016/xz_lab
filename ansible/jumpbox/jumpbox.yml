@@ -1,15 +1,35 @@
-- name: provision jumpbox users
+- name: jumpbox provisioning
   hosts: jumpbox
   become: yes
   vars:
     num_users: "{{ groups['target'] | length }}" 
     user_name: "{{ 'xzlab%02x' | format(item) }}"
-  pre_tasks:
-    - name: include ansible vars
-      include_vars: "../ansible_vars.yml" 
   tasks:
-    - name: Create users    
+    - name: create jumpbox users and add authorized keys
       include_tasks: jumpbox_users.yml
+      loop: "{{ range(0, num_users|int, 1)|list }}"
+      loop_control:
+        label: "{{ user_name }}"
+    - name: sudo apt update
+      apt:
+        update_cache: yes
+    - name: sudo apt upgrade -y
+      apt:
+        upgrade: dist
+    - name: sudo apt install docker docker.io docker-compose -y
+      apt:
+        pkg:
+        - docker
+        - docker.io
+        - docker-compose
+    - name: deploy Dockerfile
+      copy:
+        src: resources/Dockerfile
+        dest: /tmp/Dockerfile
+    - name: build docker image
+      command: docker build -t xzlab /tmp
+    - name: run docker containers
+      command: "docker run --name {{ user_name }} -d xzlab:latest"
       loop: "{{ range(0, num_users|int, 1)|list }}"
       loop_control:
         label: "{{ user_name }}"

@@ -9,7 +9,7 @@ public_subnet_cidr = "10.110.1.0/24"
 private_subnet_cidr = "10.110.2.0/24"
 
 
-num_targets = 2 # Number of hosts to target
+num_targets = 1 # Number of hosts to target
 
 
 allowed_IPs = 	[
@@ -22,3 +22,4 @@ jumpbox_key_name = "xz_lab_jumpbox"
 target_key_name = "xz_lab_target"
 
 key_path = "~/.ssh/"
+admin_path = "/home/couriersix/Git/xz_lab/admin"

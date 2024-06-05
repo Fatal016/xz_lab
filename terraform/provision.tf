@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     ansible = {
-      version = "~> 1.2.0"
+      version = "~> 1.3.0"
       source  = "ansible/ansible"
     }
   }
@@ -9,6 +9,7 @@ terraform {
 
 # Generate Ansible inventory file for use by playbooks
 resource "local_file" "host_inventory" {
+
 	filename = "../ansible/inventory.ini"
 
 	content = <<-EOT
@@ -20,10 +21,10 @@ resource "local_file" "host_inventory" {
 				
 		[jumpbox:vars]
 		ansible_user=${var.jumpbox_user}
-		
+	
 		[target:vars]
 		ansible_user=${var.target_user}
-		ansible_ssh_common_args="-o StrictHostKeyChecking=no ProxyJump=${var.jumpbox_user}@${aws_instance.jumpbox.public_ip} -F ${path.cwd}/../admin/ssh_config"
+		ansible_ssh_common_args="-o ProxyJump=${var.jumpbox_user}@${aws_instance.jumpbox.public_ip}"
 	EOT
 	
 	file_permission = "0660"
@@ -61,89 +62,13 @@ resource "local_file" "ssh_config" {
     ])
 }
 
-#resource "ansible_host" "controller" {
-#	name = "controller"
-#	groups = [""]
-#}
-
-#resource "ansible_host" "localhost" {
-#	name = "localhost"
-#	
-#	variables = {
-#		ansible_ssh_common_args = "-i ~/.ssh/id_rsa"
-#	}
-#}
-
-
-
-
-resource "ansible_host" "jumpbox" {
-	depends_on = [local_file.ssh_config]
-
-	name = "${aws_instance.jumpbox.public_ip}"
-	groups = ["jumpbox"]
-
-	variables = {
-		ansible_user = "ubuntu"
-	}
-}
-
-
-resource "ansible_group" "targets" {
-	depends_on = [local_file.ssh_config]
-
-	name = "targets"
-	children = [join(",",aws_instance.target.*.private_ip)]
-
-	variables = {
-		ansible_user = "ubuntu"
-		ansible_ssh_common_args = "-o StrictHostKeyChecking=no ProxyJump=ubuntu@3.140.193.44 -F /home/couriersix/Git/xz_lab/terraform/../admin/ssh_config"
-	}
-}
-
-resource "ansible_host" "test_target" {
-	depends_on = [local_file.ssh_config]
-
-    name = "${element(aws_instance.target.*.private_ip, 1)}"
-
-    variables = {
-        ansible_user = "ubuntu"
-        ansible_ssh_common_args = "-o StrictHostKeyChecking=no ProxyJump=ubuntu@${aws_instance.jumpbox.public_ip} -F /home/couriersix/Git/xz_lab/admin/ssh_config"
-    }
-}
-
 resource "ansible_playbook" "ansible_controller" {
     playbook = "../ansible/controller/controller.yml"
 	name = "localhost"
 	replayable = true
-	verbosity = 2
 
 	extra_vars = {
 		num_users=length(aws_instance.target)
 		admin_path=abspath("../admin")
 	}
 }
-
-resource "ansible_playbook" "ansible_target" {
-
-	playbook = "../ansible/target/target.yml"
-	name = "test_target"
-#	groups = ["targets"]
-	replayable = true
-	verbosity = 6
-}
-
-#resource "ansible_playbook" "test_connectivity" {
-#	depends_on = [aws_instance.target]	
-#
-#	playbook = "../ansible/ping.yml"
-#	name = "localhost"
-#	groups = ["target"]
-#	replayable = true
-#
-#	extra_vars = {
-#		ansible_user="ubuntu"
-#		ansible_ssh_private_key="~/.ssh/xz_lab_target.pem"
-#		ssh-common-args="-o ProxyJump=${aws_instance.jumpbox.public_ip}"
-#	}
-#}

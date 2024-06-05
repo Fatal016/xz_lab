@@ -58,6 +58,10 @@ variable "key_path" {
 	description = "local path to private keys for deployed hosts"
 }
 
+variable "admin_path" {
+	type = string
+	description = "local path to admin tools/resources"
+}
 
 #variable "ansible_expression" {
 #	type = string

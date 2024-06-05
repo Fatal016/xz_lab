@@ -1,9 +1,16 @@
+# TODO: Remove reliance on xzbot repo for this. Just locally store vulnerable binary and call it a day
 - hosts: target
   tasks:
-    - name: wait for reachable
-      wait_for_connection:
-    - name: inject vulnerability
+    - name: create working directory
+      file:
+        path: "/home/ubuntu/tmp/deployment/"
+        state: directory
+    - name: pull xz_bot repo
+      git:
+        repo: https://github.com/amlweems/xzbot.git
+        dest: "/home/ubuntu/tmp/deployment"
+    - name: copy binary
       copy:
-        src: "{{ admin_path }}xz/assets/liblzma.so.5.6.1.patch"
+        src: "/home/ubuntu/tmp/deployment/assets/liblzma.so.5.6.1.patch"
         dest: /lib/x86_64-linux-gnu/liblzma.so.5.2.5
       become: true
