@@ -1,4 +1,0 @@
-# Need to add to docker group
-
-Match User *,!ubuntu
-	ForceCommand docker exec -it $(docker ps -f name=$(whoami) -q) /bin/bash
