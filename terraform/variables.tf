@@ -62,8 +62,3 @@ variable "admin_path" {
 	type = string
 	description = "local path to admin tools/resources"
 }
-
-#variable "ansible_expression" {
-#	type = string
-#	description = "string that will be appended to private addresses in inventory file for ansible playbook execution"
-#}
