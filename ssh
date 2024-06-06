@@ -1,2 +1,4 @@
-Match User *,!root
-        ForceCommand sudo docker run -d ubuntu:latest tail -f /dev/null && sudo docker exec -it $(sudo docker ps -lq) /bin/bash
+# Need to add to docker group
+
+Match User *,!ubuntu
+	ForceCommand docker exec -it $(docker ps -f name=$(whoami) -q) /bin/bash

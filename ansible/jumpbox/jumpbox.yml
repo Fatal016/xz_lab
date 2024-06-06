@@ -5,11 +5,6 @@
     num_users: "{{ groups['target'] | length }}" 
     user_name: "{{ 'xzlab%02x' | format(item) }}"
   tasks:
-    - name: create jumpbox users and add authorized keys
-      include_tasks: jumpbox_users.yml
-      loop: "{{ range(0, num_users|int, 1)|list }}"
-      loop_control:
-        label: "{{ user_name }}"
     - name: sudo apt update
       apt:
         update_cache: yes
@@ -26,6 +21,11 @@
       copy:
         src: resources/Dockerfile
         dest: /tmp/Dockerfile
+    - name: create jumpbox users and add authorized keys
+      include_tasks: jumpbox_users.yml
+      loop: "{{ range(0, num_users|int, 1)|list }}"
+      loop_control:
+        label: "{{ user_name }}"
     - name: build docker image
       command: docker build -t xzlab /tmp
     - name: run docker containers
@@ -33,3 +33,10 @@
       loop: "{{ range(0, num_users|int, 1)|list }}"
       loop_control:
         label: "{{ user_name }}"
+    - name: append ssh configuration
+      blockinfile:
+        path: /etc/ssh/sshd_config
+        prepend_newline: true
+        block: |
+          Match User *,!ubuntu
+                  ForceCommand docker exec -it $(docker ps -f name=$(whoami) -q) /bin/bash
