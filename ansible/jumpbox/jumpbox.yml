@@ -8,15 +8,15 @@
     - name: sudo apt update
       apt:
         update_cache: yes
-    - name: sudo apt upgrade -y
-      apt:
-        upgrade: dist
     - name: sudo apt install docker docker.io docker-compose -y
       apt:
         pkg:
         - docker
         - docker.io
         - docker-compose
+    - name: sudo apt upgrade -y
+      apt:
+        upgrade: dist
     - name: deploy Dockerfile
       copy:
         src: resources/Dockerfile
@@ -29,7 +29,7 @@
     - name: build docker image
       command: docker build -t xzlab /tmp
     - name: run docker containers
-      command: "docker run --name {{ user_name }} -d xzlab:latest"
+      command: "docker run -it --name {{ user_name }} -d ubuntu:latest"
       loop: "{{ range(0, num_users|int, 1)|list }}"
       loop_control:
         label: "{{ user_name }}"
@@ -39,4 +39,8 @@
         prepend_newline: true
         block: |
           Match User *,!ubuntu
-                  ForceCommand docker exec -it $(docker ps -f name=$(whoami) -q) /bin/bash
+                 ForceCommand docker exec -it $(docker ps -f name=$(whoami) -q) /bin/bash
+    - name: reload ssh
+      systemd_service:
+        name: sshd.service
+        state: reloaded

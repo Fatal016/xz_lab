@@ -1,8 +1,0 @@
-- name: create working directory
-  file:
-    path: "{{ admin_path }}/xz/"
-    state: directory
-- name: pull xz_bot repo
-  git:
-    repo: https://github.com/amlweems/xzbot.git
-    dest: "{{ admin_path }}/xz"

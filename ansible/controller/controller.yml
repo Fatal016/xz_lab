@@ -2,7 +2,6 @@
   hosts: localhost
   connection: local
   vars:
-  #  num_users: "{{ groups['target']|length }}"
     user_name: "{{ 'xzlab%02x' | format(item) }}"
   tasks:
     - name: create admin directory if not already present
@@ -13,8 +12,6 @@
       file:
         path: "{{ admin_path }}/jumpbox_keys"
         state: directory
-    - name: pull down vulnerability
-      include_tasks: controller_vuln_install.yml
     - name: build keystore    
       include_tasks: controller_keystore.yml
       loop: "{{ range(0, num_users|int, 1)|list }}"
