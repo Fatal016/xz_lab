@@ -1,4 +1,4 @@
-# Vulnerability Exploitation Lab
+# XZ Utils Vulnerability Exploitation Lab
 
 This lab was built to give people the opportunity to have a ready-to-go lab deployment for exploiting the xz vulnerability as outlined in CVE-2024-3094 which you can learn more about [here](https://www.uptycs.com/blog/xz-utils-backdoor-vulnerability-cve-2024-3094). The steps to run and administrate this lab are outlined below. 
 
@@ -14,7 +14,7 @@ If you have any questions or run into any issues/bugs with this lab, please feel
   * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) (I'll make a more in-depth guide for this in the future)
     
     * For now, this [Reddit thread](https://www.reddit.com/r/aws/comments/13ly023/help_me_get_credentials_for_cli/) outlines some of your options for authentication, SSO is preferred, but generating local credentials in IAM also isn't that big of a deal for something like this
-    * Once installed, `aws sts get-caller-identity` should print out your account information. If it doesn't then try again.
+    * Once installed, `aws sts get-caller-identity` should print out your account information. If it doesn't then try again
 
 ## Deploying the Lab
 1. Either through the cli if you're really cool or through the AWS GUI, navigate to EC2 and generate key-pairs with the following names:
@@ -40,7 +40,7 @@ If you have any questions or run into any issues/bugs with this lab, please feel
 5. After Terraform is done deploying, navigate to ../ansible and run the following:
    * ansible-playbook jumpbox/jumpbox.yml -i inventory.ini
    * ansible-playbook target/target.yml -i inventory.ini
-6. Now the lab environment should be all set up! Distribute the lab and admin guides to the respective participants (xz_lab/guides). The steps to run through the lab are included there. Otherwise, if you're just doing the lab yourself, refer to both of the guides to make sure that you're able to run through everything smoothly.
+6. Now the lab environment should be all set up! Distribute the lab and admin guides to the respective participants (xz_lab/guides to be created). The steps to run through the lab are included there. Otherwise, if you're just doing the lab yourself, refer to both of the guides to make sure that you're able to run through everything smoothly.
 
 ## Taking Down the Lab
 Simply navigate to xz_lab/terraform and run a `terraform destroy`.
